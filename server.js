@@ -1,7 +1,6 @@
 const app = require("./app");
 const mongoose = require("mongoose");
-const DB_HOST =
-  "mongodb+srv://maroma1991:QAZ123wsx@cluster0.askrqto.mongodb.net/db-contacts?retryWrites=true&w=majority";
+const { DB_HOST } = require("./config");
 mongoose
   .connect(DB_HOST)
   .then(() => {
