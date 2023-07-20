@@ -4,7 +4,7 @@ const { Contact } = require("../models/contact");
 const getAll = async (req, res, next) => {
   try {
     const { user } = req;
-    const result = await Contact.find({ owner: user._id }).populate("user");
+    const result = await Contact.find({ owner: user._id });
     res.json(result);
   } catch (error) {
     console.log(error);
