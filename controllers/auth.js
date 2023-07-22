@@ -85,10 +85,11 @@ const logout = async (req, res, next) => {
   });
 };
 const getCurrent = async (req, res, next) => {
-  const { email, subscription } = req.user;
+  const { email, subscription, avatarURL } = req.user;
   res.json({
     email,
     subscription,
+    avatarURL,
   });
 };
 
