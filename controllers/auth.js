@@ -100,7 +100,7 @@ const changeAvatar = async (req, res, next) => {
     const { path: tempUpload } = req.file;
     const [uniqName] = email.split("@");
     const image = await jimp.read(tempUpload);
-    await image.resize(250, 250);
+    await image.resize(150, 150);
     await image.writeAsync(tempUpload);
     const resultUpload = path.join(avatarsDir, `${uniqName}.jpg`);
     avatarURL = path.join("avatars", `${uniqName}.jpg`);
