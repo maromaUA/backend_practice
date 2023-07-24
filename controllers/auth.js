@@ -16,7 +16,7 @@ const { SECRET_KEY, BASE_URL } = process.env;
 
 const registration = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
     const hashPassword = await bcrypt.hash(password, 10);
     const verificationToken = nanoid();
     const user = await User.findOne({ email });
@@ -33,7 +33,7 @@ const registration = async (req, res, next) => {
     const verifyEmail = {
       to: email,
       subject: "Verify email",
-      html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click to verify email</a>`,
+      html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Hello ${name}, click to verify email</a>`,
     };
     await sendEmail(verifyEmail);
     res.status(201).json({
@@ -86,9 +86,10 @@ const logout = async (req, res, next) => {
   });
 };
 const getCurrent = async (req, res, next) => {
-  const { email, subscription, avatarURL } = req.user;
+  const { email, subscription, avatarURL, name } = req.user;
   res.json({
     email,
+    name,
     subscription,
     avatarURL,
   });
