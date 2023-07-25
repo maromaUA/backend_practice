@@ -160,6 +160,18 @@ const resendEmail = async (req, res, next) => {
   }
 };
 
+const changeSettings = async (req, res, next) => {
+  try {
+    console.log(req.user);
+    console.log(req.file)
+  }
+  catch (error) {
+    next(error);
+  }
+}
+
+
+
 module.exports = {
   registration,
   login,
@@ -168,4 +180,5 @@ module.exports = {
   changeAvatar,
   verifyToken,
   resendEmail,
+  changeSettings,
 };

@@ -13,6 +13,7 @@ const {
   changeAvatar,
   verifyToken,
   resendEmail,
+  changeSettings,
 } = require("../../controllers/auth");
 const authenticate = require("../../middlewares/authenticate");
 const upload = require("../../middlewares/upload");
@@ -27,4 +28,5 @@ router.post("/login", validateBody(loginSchema), login);
 router.post("/logout", authenticate, logout);
 router.get("/current", authenticate, getCurrent);
 router.patch("/avatars", authenticate, upload.single("avatar"), changeAvatar);
+router.put("/settings", authenticate, upload.single("avatar"), changeSettings);
 module.exports = router;
