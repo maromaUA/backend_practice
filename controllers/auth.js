@@ -9,6 +9,7 @@ const fs = require("fs/promises");
 const jimp = require("jimp");
 const { nanoid } = require("nanoid");
 const sendEmail = require("../helpers/sendEmail");
+const { log } = require("console");
 dotenv.config();
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
@@ -162,15 +163,57 @@ const resendEmail = async (req, res, next) => {
 
 const changeSettings = async (req, res, next) => {
   try {
-    console.log(req.user);
-    console.log(req.file)
-  }
-  catch (error) {
+    const { email, _id } = req.user;
+    const { name, subscription } = req.body;
+    console.log("name:", name);
+    if (!req.file) {
+      const user = await User.findByIdAndUpdate(
+        _id,
+        { name, subscription },
+        {
+          new: true,
+        }
+      );
+      return res.json({
+        name: user.name,
+        subscription: user.subscription,
+      });
+    }
+    const { path: tempUpload } = req.file;
+    const [uniqName] = email.split("@");
+    const image = await jimp.read(tempUpload);
+    await image.resize(150, 150);
+    await image.writeAsync(tempUpload);
+    const resultUpload = path.join(avatarsDir, `${uniqName}.jpg`);
+    avatarURL = path.join("avatars", `${uniqName}.jpg`);
+    await fs.rename(tempUpload, resultUpload);
+    const user = await User.findByIdAndUpdate(
+      _id,
+      {
+        name,
+        subscription,
+        avatarURL,
+      },
+      {
+        new: true,
+      }
+    );
+    if (!user) {
+      throw HttpError(401, "Not authorized");
+    }
+
+    console.log("name:", name);
+    console.log("subscription", subscription);
+    console.log(req.file);
+    res.json({
+      name: user.name,
+      subscription: user.subscription,
+      avatarURL: user.avatarURL,
+    });
+  } catch (error) {
     next(error);
   }
-}
-
-
+};
 
 module.exports = {
   registration,

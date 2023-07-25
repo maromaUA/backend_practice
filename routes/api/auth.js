@@ -3,6 +3,7 @@ const {
   registrationSchema,
   loginSchema,
   verifyEmailSchema,
+  changeSettingsSchema,
 } = require("../../models/user");
 const { validateBody } = require("../../middlewares/validateBody");
 const {
@@ -28,5 +29,11 @@ router.post("/login", validateBody(loginSchema), login);
 router.post("/logout", authenticate, logout);
 router.get("/current", authenticate, getCurrent);
 router.patch("/avatars", authenticate, upload.single("avatar"), changeAvatar);
-router.put("/settings", authenticate, upload.single("avatar"), changeSettings);
+router.put(
+  "/settings",
+  authenticate,
+  // validateBody(changeSettingsSchema),
+  upload.single("avatar"),
+  changeSettings
+);
 module.exports = router;
