@@ -34,7 +34,7 @@ const registration = async (req, res, next) => {
     const verifyEmail = {
       to: email,
       subject: "Verify email",
-      html: `<p>Hello ${name},</p><a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">click to verify email</a>`,
+      html: `<p>Hello ${name}, <a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">click to verify email</a></p>`,
     };
     await sendEmail(verifyEmail);
     res.status(201).json({
@@ -132,7 +132,8 @@ const verifyToken = async (req, res, next) => {
       verify: true,
       verificationToken: null,
     });
-    res.json({ message: "Verification successful" });
+    console.log(req);
+    res.json({ message: "success" });
   } catch (error) {
     next(error);
   }
@@ -151,7 +152,7 @@ const resendEmail = async (req, res, next) => {
     const verifyEmail = {
       to: email,
       subject: "Verify email",
-      html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click to verify email</a>`,
+      html: `<p>Hello ${user.name}, <a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click to verify email</a></p>`,
     };
     await sendEmail(verifyEmail);
     res.json({ message: "Email has been sent" });
