@@ -133,7 +133,8 @@ const verifyToken = async (req, res, next) => {
       verificationToken: null,
     });
     console.log(req);
-    res.json({ message: "success" });
+    //res.json({ message: "success" });
+    res.redirect("https://maromaua.github.io/contacts-manager/#");
   } catch (error) {
     next(error);
   }
@@ -155,8 +156,7 @@ const resendEmail = async (req, res, next) => {
       html: `<p>Hello ${user.name}, <a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click to verify email</a></p>`,
     };
     await sendEmail(verifyEmail);
-    // res.json({ message: "Email has been sent" });
-    res.redirect("https://maromaua.github.io/contacts-manager/#");
+    res.json({ message: "Email has been sent" });
   } catch (error) {
     console.log(error);
     next(error);
