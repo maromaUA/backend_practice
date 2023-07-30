@@ -134,7 +134,7 @@ const verifyToken = async (req, res, next) => {
     });
     console.log(req);
     //res.json({ message: "success" });
-    res.redirect("https://maromaua.github.io/contacts-manager/#");
+    res.redirect("https://maromaua.github.io/contacts-manager/#/confirm");
   } catch (error) {
     next(error);
   }
