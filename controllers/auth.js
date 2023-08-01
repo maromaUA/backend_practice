@@ -74,6 +74,7 @@ const login = async (req, res, next) => {
         name: user.name,
         subscription: user.subscription,
         avatarURL: user.avatarURL,
+        theme: user.theme,
       },
     });
   } catch (error) {
@@ -89,12 +90,13 @@ const logout = async (req, res, next) => {
   });
 };
 const getCurrent = async (req, res, next) => {
-  const { email, subscription, avatarURL, name } = req.user;
+  const { email, subscription, avatarURL, name, theme } = req.user;
   res.json({
     email,
     name,
     subscription,
     avatarURL,
+    theme,
   });
 };
 
@@ -217,6 +219,22 @@ const changeSettings = async (req, res, next) => {
   }
 };
 
+const changeTheme = async (req, res, next) => {
+  try {
+    const { theme } = req.body;
+    const { _id } = req.user;
+    const user = await User.findByIdAndUpdate(_id, { theme });
+    if (!user) {
+      HttpError(404, "User not found");
+    }
+    res.json({
+      theme: user.theme,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registration,
   login,
@@ -226,4 +244,5 @@ module.exports = {
   verifyToken,
   resendEmail,
   changeSettings,
+  changeTheme,
 };

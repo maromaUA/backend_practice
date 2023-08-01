@@ -4,6 +4,7 @@ const {
   loginSchema,
   verifyEmailSchema,
   changeSettingsSchema,
+  changeThemeSchema,
 } = require("../../models/user");
 const { validateBody } = require("../../middlewares/validateBody");
 const {
@@ -15,6 +16,7 @@ const {
   verifyToken,
   resendEmail,
   changeSettings,
+  changeTheme,
 } = require("../../controllers/auth");
 const authenticate = require("../../middlewares/authenticate");
 const upload = require("../../middlewares/upload");
@@ -35,5 +37,11 @@ router.put(
   // validateBody(changeSettingsSchema),
   upload.single("avatar"),
   changeSettings
+);
+router.patch(
+  "/theme",
+  authenticate,
+  validateBody(changeThemeSchema),
+  changeTheme
 );
 module.exports = router;
