@@ -66,7 +66,7 @@ const login = async (req, res, next) => {
       id: user._id,
     };
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "22h" });
-    await User.findByIdAndUpdate(user._id, { token });
+    await User.findByIdAndUpdate(user._id, { token }, { new: true });
     res.json({
       token,
       user: {
@@ -221,9 +221,12 @@ const changeSettings = async (req, res, next) => {
 
 const changeTheme = async (req, res, next) => {
   try {
+    console.log(req.body);
     const { theme } = req.body;
+    console.log(theme);
     const { _id } = req.user;
-    const user = await User.findByIdAndUpdate(_id, { theme });
+    const user = await User.findByIdAndUpdate(_id, { theme }, { new: true });
+    console.log(user.theme);
     if (!user) {
       HttpError(404, "User not found");
     }
