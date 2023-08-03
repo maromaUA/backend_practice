@@ -9,7 +9,7 @@ const fs = require("fs/promises");
 const jimp = require("jimp");
 const { nanoid } = require("nanoid");
 const sendEmail = require("../helpers/sendEmail");
-const { log } = require("console");
+
 dotenv.config();
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
@@ -48,7 +48,6 @@ const registration = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  console.log(SECRET_KEY);
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -134,8 +133,6 @@ const verifyToken = async (req, res, next) => {
       verify: true,
       verificationToken: null,
     });
-    console.log(req);
-    //res.json({ message: "success" });
     res.redirect("https://maromaua.github.io/contacts-manager/#/confirm");
   } catch (error) {
     next(error);
@@ -160,7 +157,6 @@ const resendEmail = async (req, res, next) => {
     await sendEmail(verifyEmail);
     res.json({ message: "Email has been sent" });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -169,7 +165,7 @@ const changeSettings = async (req, res, next) => {
   try {
     const { email, _id } = req.user;
     const { name, subscription } = req.body;
-    console.log("name:", name);
+
     if (!req.file) {
       const user = await User.findByIdAndUpdate(
         _id,
@@ -206,9 +202,6 @@ const changeSettings = async (req, res, next) => {
       throw HttpError(401, "Not authorized");
     }
 
-    console.log("name:", name);
-    console.log("subscription", subscription);
-    console.log(req.file);
     res.json({
       name: user.name,
       subscription: user.subscription,
@@ -221,12 +214,11 @@ const changeSettings = async (req, res, next) => {
 
 const changeTheme = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { theme } = req.body;
-    console.log(theme);
+
     const { _id } = req.user;
     const user = await User.findByIdAndUpdate(_id, { theme }, { new: true });
-    console.log(user.theme);
+
     if (!user) {
       HttpError(404, "User not found");
     }

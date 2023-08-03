@@ -3,7 +3,6 @@ const {
   registrationSchema,
   loginSchema,
   verifyEmailSchema,
-  changeSettingsSchema,
   changeThemeSchema,
 } = require("../../models/user");
 const { validateBody } = require("../../middlewares/validateBody");
@@ -20,7 +19,6 @@ const {
 } = require("../../controllers/auth");
 const authenticate = require("../../middlewares/authenticate");
 const upload = require("../../middlewares/upload");
-//const { verify } = require("jsonwebtoken");
 
 const router = express.Router();
 
@@ -31,13 +29,7 @@ router.post("/login", validateBody(loginSchema), login);
 router.post("/logout", authenticate, logout);
 router.get("/current", authenticate, getCurrent);
 router.patch("/avatars", authenticate, upload.single("avatar"), changeAvatar);
-router.put(
-  "/settings",
-  authenticate,
-  // validateBody(changeSettingsSchema),
-  upload.single("avatar"),
-  changeSettings
-);
+router.put("/settings", authenticate, upload.single("avatar"), changeSettings);
 router.patch(
   "/theme",
   authenticate,

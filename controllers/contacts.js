@@ -7,7 +7,6 @@ const getAll = async (req, res, next) => {
     const result = await Contact.find({ owner: user._id });
     res.json(result);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -57,7 +56,6 @@ const changeContact = async (req, res, next) => {
   try {
     const { user } = req;
     const { contactId } = req.params;
-    console.log("reqBody", req.body);
     const result = await Contact.findOneAndUpdate(
       { owner: user._id, _id: contactId },
       req.body,
