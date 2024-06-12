@@ -18,7 +18,6 @@ const registration = async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
     const hashPassword = await bcrypt.hash(password, 10);
-    const verificationToken = nanoid();
     const user = await User.findOne({ email });
     if (user) {
       throw HttpError(409, "Email is already in use");
@@ -28,14 +27,8 @@ const registration = async (req, res, next) => {
       ...req.body,
       password: hashPassword,
       avatarURL,
-      verificationToken,
     });
-    const verifyEmail = {
-      to: email,
-      subject: "Verify email",
-      html: `<p>Hello ${name}, <a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">click to verify email</a></p>`,
-    };
-    await sendEmail(verifyEmail);
+    
     res.status(201).json({
       email: result.email,
       name: result.name,
@@ -52,9 +45,6 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ email });
     if (!user) {
       throw HttpError(401, "Invalid email or password");
-    }
-    if (!user.verify) {
-      throw HttpError(401, "Email is not verified");
     }
     const passwordCompare = await bcrypt.compare(password, user.password);
     if (!passwordCompare) {
