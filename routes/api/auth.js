@@ -2,7 +2,6 @@ const express = require("express");
 const {
   registrationSchema,
   loginSchema,
-  verifyEmailSchema,
   changeThemeSchema,
 } = require("../../models/user");
 const { validateBody } = require("../../middlewares/validateBody");
@@ -12,8 +11,6 @@ const {
   logout,
   getCurrent,
   changeAvatar,
-  verifyToken,
-  resendEmail,
   changeSettings,
   changeTheme,
 } = require("../../controllers/auth");
@@ -23,8 +20,6 @@ const upload = require("../../middlewares/upload");
 const router = express.Router();
 
 router.post("/register", validateBody(registrationSchema), registration);
-router.get("/verify/:verificationToken", verifyToken);
-router.post("/verify", validateBody(verifyEmailSchema), resendEmail);
 router.post("/login", validateBody(loginSchema), login);
 router.post("/logout", authenticate, logout);
 router.get("/current", authenticate, getCurrent);

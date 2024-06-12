@@ -8,7 +8,6 @@ const path = require("path");
 const fs = require("fs/promises");
 const jimp = require("jimp");
 const { nanoid } = require("nanoid");
-const sendEmail = require("../helpers/sendEmail");
 
 dotenv.config();
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
@@ -122,44 +121,6 @@ const changeAvatar = async (req, res, next) => {
   }
 };
 
-const verifyToken = async (req, res, next) => {
-  try {
-    const { verificationToken } = req.params;
-    const user = await User.findOne({ verificationToken });
-    if (!user) {
-      throw HttpError(404, "User not found");
-    }
-    await User.findByIdAndUpdate(user._id, {
-      verify: true,
-      verificationToken: null,
-    });
-    res.redirect("https://maromaua.github.io/contacts-manager/#/confirm");
-  } catch (error) {
-    next(error);
-  }
-};
-
-const resendEmail = async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      throw HttpError(401, "Email not found");
-    }
-    if (user.verify) {
-      throw HttpError(400, "Verification has already been passed");
-    }
-    const verifyEmail = {
-      to: email,
-      subject: "Verify email",
-      html: `<p>Hello ${user.name}, <a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click to verify email</a></p>`,
-    };
-    await sendEmail(verifyEmail);
-    res.json({ message: "Email has been sent" });
-  } catch (error) {
-    next(error);
-  }
-};
 
 const changeSettings = async (req, res, next) => {
   try {
@@ -236,8 +197,6 @@ module.exports = {
   logout,
   getCurrent,
   changeAvatar,
-  verifyToken,
-  resendEmail,
   changeSettings,
   changeTheme,
 };

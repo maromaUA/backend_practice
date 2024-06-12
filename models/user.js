@@ -28,14 +28,6 @@ const userSchema = new Schema(
     },
     token: String,
     avatarURL: String,
-    verify: {
-      type: Boolean,
-      default: false,
-    },
-    verificationToken: {
-      type: String,
-      required: [true, "Verify token is required"],
-    },
     theme: {
       type: String,
       default: "light",
@@ -56,9 +48,6 @@ const loginSchema = Joi.object({
   email: Joi.string().pattern(emailPattern).required(),
 });
 
-const verifyEmailSchema = Joi.object({
-  email: Joi.string().pattern(emailPattern).required(),
-});
 
 const changeThemeSchema = Joi.object({
   theme: Joi.string().valid("light", "dark").required(),
@@ -75,7 +64,6 @@ const User = model("user", userSchema);
 module.exports = {
   registrationSchema,
   loginSchema,
-  verifyEmailSchema,
   changeSettingsSchema,
   changeThemeSchema,
 
